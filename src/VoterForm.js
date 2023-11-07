@@ -1,12 +1,24 @@
 import React, { useRef } from "react";
 
-import { TextField, Box, Typography, Button } from "@mui/material";
+import { TextField, Box, Typography, Button, Link } from "@mui/material";
 import SignatureCanvas from "react-signature-canvas";
 import { MobileDatePicker } from "@mui/x-date-pickers";
 
 export default function VoterForm() {
   const sigCanvasRef = useRef({});
   const [value, setValue] = React.useState(null);
+  const robotoFontFamily = [
+    "-apple-system",
+    "BlinkMacSystemFont",
+    '"Segoe UI"',
+    "Roboto",
+    '"Helvetica Neue"',
+    "Arial",
+    "sans-serif",
+    '"Apple Color Emoji"',
+    '"Segoe UI Emoji"',
+    '"Segoe UI Symbol"',
+  ].join(",");
 
   return (
     <Box m={1} width="210mm" height="297mm" fontFamily="Times New Roman, serif">
@@ -178,29 +190,17 @@ export default function VoterForm() {
             className="no-print"
             // mark this DatePicker with the class no-print
             sx={{
-              //"@media print": { display: "none" },
               "&& .MuiOutlinedInput-notchedOutline": {
                 // Customize border
                 borderColor: "black", // Color
                 borderLeftColor: "white", // Specific side
                 borderRightColor: "white", // Specific side
                 borderTopColor: "white", // Specific side
-                //borderWidth: "2px", // Width
               },
               "&& .MuiInputBase-input": {
                 // Customize input
                 padding: "0px", // Specific side
               },
-              // "&&:hover .MuiOutlinedInput-notchedOutline": {
-              //   // Customize on hover
-              //   borderColor: "green",
-              //   borderWidth: "2px",
-              // },
-              // "&& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-              //   // Customize when focused
-              //   borderColor: "blue",
-              //   borderWidth: "2px",
-              // },
             }}
           />
         </Box>
@@ -214,7 +214,7 @@ export default function VoterForm() {
         <TextField id="standard-basic" label="" variant="standard" />
         <Typography ml={4}>(и-мејл)</Typography>
       </Box>
-      <Box>
+      <Box mb={2}>
         <SignatureCanvas
           ref={sigCanvasRef}
           penColor="black"
@@ -229,16 +229,59 @@ export default function VoterForm() {
       </Box>
       <Button
         onClick={() => sigCanvasRef.current.clear()}
-        sx={{ "@media print": { display: "none" } }}
+        sx={{
+          "@media print": { display: "none" },
+          fontFamily: robotoFontFamily,
+          mr: 1,
+        }}
+        variant="contained"
       >
         Очисти потпис
       </Button>
       <Button
         onClick={() => window.print()}
-        sx={{ "@media print": { display: "none" } }}
+        sx={{
+          "@media print": { display: "none" },
+          fontFamily: robotoFontFamily,
+        }}
+        variant="contained"
       >
         Одштампај у PDF
       </Button>
+      <Box
+        sx={{
+          "@media print": { display: "none" },
+          fontFamily: robotoFontFamily,
+        }}
+        ml={1}
+        mt={1}
+        display="flex"
+        flexDirection="row"
+        alignContent={"center"}
+      >
+        <Typography
+          variant="subtitle1"
+          component="div"
+          sx={{
+            fontFamily: robotoFontFamily,
+          }}
+          mr={1}
+        >
+          Source Code:{" "}
+        </Typography>
+        <Box>
+          <Link
+            href="https://github.com/marko7460/izbori2023"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{
+              fontFamily: robotoFontFamily,
+            }}
+          >
+            https://github.com/marko7460/izbori2023
+          </Link>
+        </Box>
+      </Box>
     </Box>
   );
 }
