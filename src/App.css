@@ -21,7 +21,8 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  #color: white;
+  color: black;
 }
 
 .App-link {
@@ -34,5 +35,18 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media print {
+  .A4 {
+    width: 210mm;
+    height: 297mm;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none;
   }
 }
