@@ -1,6 +1,4 @@
 import "./App.css";
-import "./VoterRegistrationForm";
-import VoterRegistrationForm from "./VoterRegistrationForm";
 import VoterForm from "./VoterForm";
 import { CssBaseline } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material";
