@@ -1,11 +1,12 @@
 import "./OfficialDocument.css";
 import { HEADER_LINES, NOTE_LINES, PASSPORT_NOTE, TITLE_LINES } from "./lib/formCopy";
+import { PAGE_HEIGHT_PX } from "./lib/pageSize";
 
 export default function OfficialDocument({ values, signatureDataUrl, scale = 1 }) {
   const jmbgDigits = String(values.jmbg || "").padEnd(13, " ").slice(0, 13).split("");
 
   return (
-    <div className="official-scale" style={{ height: `${842 * scale}pt` }}>
+    <div className="official-scale" style={{ height: `${PAGE_HEIGHT_PX * scale}px` }}>
       <div
         className="official-page"
         style={{ transform: `scale(${scale})` }}

@@ -13,6 +13,7 @@ import OfficialDocument from "./OfficialDocument";
 import { EMPTY_FORM_VALUES, FIELDS, FORM_TITLE, NOTE_LINES } from "./lib/formCopy";
 import { buildPdfFilename, generateVoterPdf } from "./lib/generatePdf";
 import { digitsOnly, isCompleteJmbg, isValidJmbg } from "./lib/jmbg";
+import { PAGE_WIDTH_PX } from "./lib/pageSize";
 import { savePdfOnDevice } from "./lib/savePdf";
 import "./VoterForm.css";
 
@@ -29,7 +30,7 @@ function usePreviewScale(containerRef) {
 
     const update = () => {
       const width = node.clientWidth || 320;
-      setScale(Math.min(width / 595.5, 1));
+      setScale(Math.min(width / PAGE_WIDTH_PX, 1));
     };
 
     update();
@@ -377,7 +378,26 @@ export default function VoterForm() {
               <Button variant="outlined" onClick={clearSignature}>
                 Очисти потпис
               </Button>
+              <Button
+                variant="contained"
+                onClick={savePdf}
+                disabled={busy}
+                data-testid="save-pdf"
+              >
+                {busy ? "Правим PDF…" : "Сачувај PDF на уређај"}
+              </Button>
+              <Button variant="outlined" onClick={() => window.print()}>
+                Одштампај
+              </Button>
             </div>
+            {status ? (
+              <p
+                className={status.type === "error" ? "status-error" : "status-ok"}
+                role="status"
+              >
+                {status.message}
+              </p>
+            ) : null}
           </section>
 
           <section className="preview-column panel">
@@ -392,28 +412,13 @@ export default function VoterForm() {
               />
             </div>
 
-            <div className="sticky-save no-print">
-              <div className="actions">
-                <Button
-                  variant="contained"
-                  onClick={savePdf}
-                  disabled={busy}
-                  data-testid="save-pdf"
-                >
-                  {busy ? "Правим PDF…" : "Сачувај PDF на уређај"}
-                </Button>
-                <Button variant="outlined" onClick={() => window.print()}>
-                  Одштампај
-                </Button>
-              </div>
-              {status ? (
-                <p
-                  className={status.type === "error" ? "status-error" : "status-ok"}
-                  role="status"
-                >
-                  {status.message}
-                </p>
-              ) : null}
+            <div className="actions no-print">
+              <Button variant="contained" onClick={savePdf} disabled={busy}>
+                {busy ? "Правим PDF…" : "Сачувај PDF на уређај"}
+              </Button>
+              <Button variant="outlined" onClick={() => window.print()}>
+                Одштампај
+              </Button>
             </div>
 
             <div className="fine-print no-print">

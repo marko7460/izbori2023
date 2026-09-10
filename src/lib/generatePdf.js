@@ -267,11 +267,12 @@ export async function generateVoterPdf(values, fonts) {
   const pdfDoc = await PDFDocument.create();
   pdfDoc.registerFontkit(fontkit);
 
+  // Keep the full Cyrillic font. Subsetting can drop Serbian letters such as Б and л.
   const regularFont = await pdfDoc.embedFont(asFontBytes(fonts.regular), {
-    subset: true,
+    subset: false,
   });
   const boldFont = await pdfDoc.embedFont(asFontBytes(fonts.bold), {
-    subset: true,
+    subset: false,
   });
   const page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
 

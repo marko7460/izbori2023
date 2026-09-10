@@ -42,7 +42,7 @@ describe("generateVoterPdf", () => {
       fonts
     );
 
-    expect(pdfBytes.byteLength).toBeGreaterThan(1000);
+    expect(pdfBytes.byteLength).toBeGreaterThan(100000);
 
     const { PDFDocument } = await import("pdf-lib");
     const document = await PDFDocument.load(pdfBytes);
