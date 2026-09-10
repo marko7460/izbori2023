@@ -1,70 +1,77 @@
-# Getting Started with Create React App
+# Захтев за гласање у иностранству
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Client-side helper for the official Serbian request to be listed as voting abroad
+(*Zahtev za upis u birački spisak podatka da će birač glasati u inostranstvu*).
 
-## Available Scripts
+**Live site:** [glasajmo.org](https://glasajmo.org/)
 
-In the project directory, you can run:
+Fill the form, sign it, and save a PDF on your phone or computer. The PDF is built in the browser. Nothing is uploaded or stored on a server.
 
-### `yarn start`
+Попуните службени захтев, потпишите га и сачувајте PDF на свој уређај. Подаци остају код вас.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## What it does
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Collects the fields from the current official document, including parent’s name and a 13-digit JMBG drawn into character boxes
+- Shows a live A4 preview of the filled form
+- Lets you sign on a canvas
+- Saves a one-page PDF locally (`Сачувај PDF на уређај`): share sheet on phones, download on laptops
+- Offers print as a fallback
+- Warns if required fields are empty, but still lets you save
 
-### `yarn test`
+After saving, attach a copy of a Serbian passport or ID card and send the request to a diplomatic-consular mission of the Republic of Serbia (in person, by post, fax, or email), as noted on the form.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The legal citation on the document is Article 16, paragraph 1 of the Law on the Unified Voter Register (*Zakon o Jedinstvenom biračkom spisku*, Official Gazette of RS Nos. 104/09, 99/11, 44/24 and 96/25).
 
-### `yarn build`
+## Privacy
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+No form values are sent to Firebase, analytics, or any backend. The only network requests are the page itself and the Liberation Serif fonts used to draw Cyrillic in the PDF.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Local development
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+This is a [Create React App](https://github.com/facebook/create-react-app) project. Node.js and npm (or Yarn) are required.
 
-### `yarn eject`
+```bash
+npm ci
+npm start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Open [http://localhost:3000](http://localhost:3000). The page reloads on edits.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+npm test          # Jest, interactive watch mode
+npm test -- --watchAll=false
+npm run build     # production bundle in build/
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+CI uses `npm ci && npm run build`. Do not run `npm run eject` unless you intend to take over the webpack/Babel config permanently.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## How the app is structured
 
-## Learn More
+| Path | Role |
+| --- | --- |
+| `src/VoterForm.js` | Form UI, validation, signature pad, save/print actions |
+| `src/OfficialDocument.js` | On-screen A4 preview of the official layout |
+| `src/lib/formCopy.js` | Official Serbian labels, notes, and empty values |
+| `src/lib/generatePdf.js` | Builds the A4 PDF with `pdf-lib` and Liberation Serif |
+| `src/lib/savePdf.js` | Web Share API on mobile; file download on desktop |
+| `src/lib/jmbg.js` | Keeps JMBG input to 13 digits (no checksum check) |
+| `public/fonts/` | Liberation Serif Regular/Bold (SIL Open Font License) |
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The PDF filename looks like `zahtev-glasanje-inostranstvo-<name>.pdf`. On iOS, the share payload is the PDF file only, so the system does not also save a leftover text file.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Deployment
 
-### Code Splitting
+Static hosting on Firebase (`izbori2023formular`), with the custom domain **glasajmo.org**.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+GitHub Actions deploys on every merge to `master` (live channel) and publishes a preview channel for pull requests. See `.github/workflows/`.
 
-### Analyzing the Bundle Size
+To deploy locally you need the Firebase CLI and project credentials:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```bash
+npm run build
+npx firebase deploy --only hosting
+```
 
-### Making a Progressive Web App
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Application source is under the Apache License 2.0 (`src/LICENSE`). Liberation Serif fonts are under the SIL Open Font License 1.1 (`public/fonts/LICENSE-LiberationSerif.txt`).
