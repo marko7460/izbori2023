@@ -2,21 +2,34 @@ import "./App.css";
 import VoterForm from "./VoterForm";
 import { CssBaseline } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 function App() {
   const theme = createTheme({
     typography: {
-      fontFamily: "Times New Roman, serif",
+      fontFamily: [
+        "-apple-system",
+        "BlinkMacSystemFont",
+        '"Segoe UI"',
+        "Roboto",
+        '"Helvetica Neue"',
+        "Arial",
+        "sans-serif",
+      ].join(","),
+    },
+    palette: {
+      primary: {
+        main: "#0c4076",
+      },
+      secondary: {
+        main: "#c6363c",
+      },
     },
   });
+
   return (
     <ThemeProvider theme={theme}>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <CssBaseline />
-        <VoterForm />
-      </LocalizationProvider>
+      <CssBaseline />
+      <VoterForm />
     </ThemeProvider>
   );
 }

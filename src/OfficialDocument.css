@@ -1,0 +1,284 @@
+@font-face {
+  font-family: "Liberation Serif";
+  src: url("/fonts/LiberationSerif-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Liberation Serif";
+  src: url("/fonts/LiberationSerif-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+.official-scale {
+  width: 100%;
+  overflow: hidden;
+}
+
+.official-page {
+  position: relative;
+  width: 595.5pt;
+  height: 842pt;
+  background: #fff;
+  color: #000;
+  font-family: "Times New Roman", "Liberation Serif", Times, serif;
+  font-size: 12pt;
+  line-height: 1.15;
+  transform-origin: top left;
+}
+
+.official-abs {
+  position: absolute;
+  white-space: nowrap;
+}
+
+.official-header {
+  left: 72pt;
+  top: 72.5pt;
+  width: 454pt;
+  white-space: normal;
+}
+
+.official-title {
+  width: 100%;
+  text-align: center;
+  font-weight: 700;
+}
+
+.official-title-1 {
+  top: 127.7pt;
+}
+
+.official-title-2 {
+  top: 141.5pt;
+}
+
+.official-title-3 {
+  top: 155.3pt;
+}
+
+.official-label-1 {
+  left: 82.5pt;
+  top: 215.7pt;
+}
+
+.official-label-2 {
+  left: 82.5pt;
+  top: 240pt;
+}
+
+.official-label-3 {
+  left: 82.5pt;
+  top: 290.1pt;
+}
+
+.official-label-4 {
+  left: 82.5pt;
+  top: 317.5pt;
+}
+
+.official-label-5 {
+  left: 82.5pt;
+  top: 342.5pt;
+}
+
+.official-label-6 {
+  left: 82.5pt;
+  top: 367.6pt;
+  white-space: normal;
+  width: 210pt;
+}
+
+.official-line {
+  position: absolute;
+  height: 0;
+  border-bottom: 1pt solid #000;
+}
+
+.official-line-1,
+.official-line-2,
+.official-line-4,
+.official-line-5,
+.official-line-6 {
+  left: 293pt;
+  width: 248pt;
+}
+
+.official-line-1 {
+  top: 234.5pt;
+}
+
+.official-line-2 {
+  top: 259.5pt;
+}
+
+.official-line-4 {
+  top: 336.5pt;
+}
+
+.official-line-5 {
+  top: 361.5pt;
+}
+
+.official-line-6 {
+  top: 387.5pt;
+}
+
+.official-jmbg {
+  position: absolute;
+  left: 292.5pt;
+  top: 284.5pt;
+  width: 248pt;
+  height: 27pt;
+  display: flex;
+  border: 1pt solid #000;
+  box-sizing: border-box;
+}
+
+.official-jmbg-cell {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1pt solid #000;
+  font-size: 12pt;
+}
+
+.official-jmbg-cell:last-child {
+  border-right: 0;
+  flex: 1.2;
+}
+
+.official-value {
+  left: 297pt;
+  width: 240pt;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.official-value-1 {
+  top: 218pt;
+}
+
+.official-value-2 {
+  top: 243pt;
+}
+
+.official-value-4 {
+  top: 320pt;
+}
+
+.official-value-5 {
+  top: 345pt;
+}
+
+.official-value-6 {
+  top: 371pt;
+}
+
+.official-passport {
+  left: 72pt;
+  top: 440.3pt;
+  white-space: normal;
+  width: 450pt;
+}
+
+.official-line-date {
+  left: 129pt;
+  top: 493.5pt;
+  width: 151pt;
+}
+
+.official-line-sign,
+.official-line-phone,
+.official-line-email {
+  left: 344pt;
+  width: 197pt;
+}
+
+.official-line-sign {
+  top: 518.5pt;
+}
+
+.official-line-phone {
+  top: 564.5pt;
+}
+
+.official-line-email {
+  top: 614.5pt;
+}
+
+.official-line-note {
+  left: 129pt;
+  top: 683.5pt;
+  width: 412pt;
+}
+
+.official-caption-date {
+  left: 129pt;
+  top: 499pt;
+  font-size: 10pt;
+}
+
+.official-caption-sign {
+  left: 425.75pt;
+  top: 524.8pt;
+  font-size: 9pt;
+}
+
+.official-caption-phone {
+  left: 394pt;
+  top: 570.7pt;
+  font-size: 9pt;
+}
+
+.official-caption-email {
+  left: 425pt;
+  top: 621pt;
+  font-size: 9pt;
+}
+
+.official-date-value {
+  left: 140pt;
+  top: 476pt;
+  width: 180pt;
+}
+
+.official-phone-value,
+.official-email-value {
+  left: 350pt;
+  width: 185pt;
+}
+
+.official-phone-value {
+  top: 548pt;
+  font-size: 11pt;
+}
+
+.official-email-value {
+  top: 598pt;
+  font-size: 11pt;
+}
+
+.official-signature {
+  position: absolute;
+  left: 352pt;
+  top: 470pt;
+  width: 180pt;
+  height: 48pt;
+  object-fit: contain;
+  object-position: left bottom;
+}
+
+.official-note {
+  left: 72pt;
+  top: 701pt;
+  width: 454pt;
+  font-size: 9pt;
+  white-space: normal;
+  line-height: 1.15;
+}
