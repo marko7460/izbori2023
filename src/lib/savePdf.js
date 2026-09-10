@@ -9,17 +9,16 @@ export async function savePdfOnDevice(pdfBytes, filename) {
   const bytes = pdfBytes instanceof Uint8Array ? pdfBytes : new Uint8Array(pdfBytes);
   const blob = new Blob([bytes], { type: "application/pdf" });
   const file = new File([blob], filename, { type: "application/pdf" });
+  const shareData = { files: [file] };
 
+  // iOS treats title/text as a second share item, which saves an extra "text" file.
   if (
     isMobileDevice() &&
     navigator.canShare &&
-    navigator.canShare({ files: [file] })
+    navigator.canShare(shareData)
   ) {
     try {
-      await navigator.share({
-        files: [file],
-        title: filename,
-      });
+      await navigator.share(shareData);
       return "shared";
     } catch (error) {
       if (error && error.name === "AbortError") {
