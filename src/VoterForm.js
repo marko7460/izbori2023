@@ -1,287 +1,424 @@
-import React, { useRef } from "react";
-
-import { TextField, Box, Typography, Button, Link } from "@mui/material";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import {
+  Alert,
+  Box,
+  Button,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
 import SignatureCanvas from "react-signature-canvas";
-import { MobileDatePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
+import OfficialDocument from "./OfficialDocument";
+import { EMPTY_FORM_VALUES, FIELDS, FORM_TITLE, NOTE_LINES } from "./lib/formCopy";
+import { buildPdfFilename, generateVoterPdf } from "./lib/generatePdf";
+import { digitsOnly } from "./lib/jmbg";
+import { PAGE_WIDTH_PX } from "./lib/pageSize";
+import { savePdfOnDevice } from "./lib/savePdf";
+import "./VoterForm.css";
 
-export default function VoterForm() {
-  const sigCanvasRef = useRef({});
-  const [value, setValue] = React.useState(null);
-  const robotoFontFamily = [
-    "-apple-system",
-    "BlinkMacSystemFont",
-    '"Segoe UI"',
-    "Roboto",
-    '"Helvetica Neue"',
-    "Arial",
-    "sans-serif",
-    '"Apple Color Emoji"',
-    '"Segoe UI Emoji"',
-    '"Segoe UI Symbol"',
-  ].join(",");
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function usePreviewScale(containerRef) {
+  const [scale, setScale] = useState(0.5);
+
+  useEffect(() => {
+    const node = containerRef.current;
+    if (!node) {
+      return undefined;
+    }
+
+    const update = () => {
+      const width = node.clientWidth || 320;
+      setScale(Math.min(width / PAGE_WIDTH_PX, 1));
+    };
+
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [containerRef]);
+
+  return scale;
+}
+
+function SignatureField({ signatureRef, onStroke }) {
+  const containerRef = useRef(null);
+  const [width, setWidth] = useState(320);
+
+  useEffect(() => {
+    const node = containerRef.current;
+    if (!node) {
+      return undefined;
+    }
+
+    const update = () => setWidth(Math.max(node.clientWidth, 240));
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <Box m={1} width="210mm" height="297mm" fontFamily="Times New Roman, serif">
-      <Typography
-        variant="subtitle1"
-        component="div"
-        fontFamily="Times New Roman, serif"
-      >
-        У складу са чланом 16. став 1. Закона о Јединственом бирачком списку
-        <br />
-        („Службени гласник Републике Србије“ број 104/2009 и 99/2011) подносим:
-        <br />
-        <br />
-      </Typography>
-      <Typography
-        variant="h6"
-        component="div"
-        fontFamily="Times New Roman, serif"
-        ml={20}
-      >
-        З А Х Т Е В
-        <br />
-      </Typography>
-      <Typography
-        variant="h6"
-        component="div"
-        fontFamily="Times New Roman, serif"
-        ml={5}
-      >
-        ЗА УПИС У БИРАЧКИ СПИСАК ПОДАТКА
-        <br />
-      </Typography>
-      <Typography
-        variant="h6"
-        component="div"
-        fontFamily="Times New Roman, serif"
-        ml={4}
-      >
-        ДА ЋЕ БИРАЧ ГЛАСАТИ У ИНОСТРАНСТВУ
-        <br />
-        <br />
-      </Typography>
-      <Box display="flex" flexDirection="row" alignContent="center" mb={1}>
-        <Typography
-          variant="subtitle1"
-          component="div"
-          fontFamily="Times New Roman, serif"
-          mr={1}
-        >
-          1. Име и презиме:
-        </Typography>
-        <Box flexGrow={1}>
-          <TextField
-            id="standard-basic"
-            label=""
-            variant="standard"
-            fullWidth
-            style={{ fontFamily: "Times New Roman, serif", fontSize: "1rem" }}
-          />
-        </Box>
-      </Box>
-      <Box display="flex" flexDirection="row" alignContent="center" mb={1}>
-        <Typography
-          variant="subtitle1"
-          component="div"
-          fontFamily="Times New Roman, serif"
-          mr={1}
-        >
-          2. Место рођења:
-        </Typography>
-        <Box flexGrow={1}>
-          <TextField
-            id="standard-basic"
-            label=""
-            variant="standard"
-            fullWidth
-          />
-        </Box>
-      </Box>
-      <Box display="flex" flexDirection="row" alignContent="center" mb={1}>
-        <Typography
-          variant="subtitle1"
-          component="div"
-          fontFamily="Times New Roman, serif"
-          mr={1}
-        >
-          3. Јединствени матични број грађана:
-        </Typography>
-        <Box flexGrow={1}>
-          <TextField
-            id="standard-basic"
-            label=""
-            variant="standard"
-            fullWidth
-          />
-        </Box>
-      </Box>
-      <Box display="flex" flexDirection="row" alignContent="center" mb={1}>
-        <Typography
-          variant="subtitle1"
-          component="div"
-          fontFamily="Times New Roman, serif"
-          mr={1}
-        >
-          4. Адреса пребивалишта у Србији:
-        </Typography>
-        <Box flexGrow={1}>
-          <TextField
-            id="standard-basic"
-            label=""
-            variant="standard"
-            fullWidth
-          />
-        </Box>
-      </Box>
-      <Box display="flex" flexDirection="row" alignContent="center" mb={1}>
-        <Typography
-          variant="subtitle1"
-          component="div"
-          fontFamily="Times New Roman, serif"
-          mr={1}
-        >
-          5. Адреса боравка у иностранству:
-        </Typography>
-        <Box flexGrow={1}>
-          <TextField
-            id="standard-basic"
-            label=""
-            variant="standard"
-            fullWidth
-          />
-        </Box>
-      </Box>
-      <Box display="flex" flexDirection="row" alignContent="center" mb={1}>
-        <Typography
-          variant="subtitle1"
-          component="div"
-          fontFamily="Times New Roman, serif"
-          mr={1}
-        >
-          6. Град, држава – где желим да гласам <br /> у иностранству:
-        </Typography>
-        <Box flexGrow={1}>
-          <TextField
-            id="standard-basic"
-            label=""
-            variant="standard"
-            fullWidth
-          />
-        </Box>
-      </Box>
-      <br />
-      <Typography
-        variant="subtitle1"
-        component="div"
-        fontFamily="Times New Roman, serif"
-        //mb={2}
-      >
-        Уз захтев прилажем копију пасоша/личне карте Републике Србије.
-      </Typography>
-      <Box display="flex" flexDirection="column" mb={1}>
-        <Box display="flex" flexDirection="row">
-          <MobileDatePicker
-            label=""
-            value={value}
-            onChange={(newValue) => {
-              setValue(newValue);
-            }}
-            className="no-print"
-            // mark this DatePicker with the class no-print
-            sx={{
-              "&& .MuiOutlinedInput-notchedOutline": {
-                // Customize border
-                borderColor: "black", // Color
-                borderLeftColor: "white", // Specific side
-                borderRightColor: "white", // Specific side
-                borderTopColor: "white", // Specific side
-              },
-              "&& .MuiInputBase-input": {
-                // Customize input
-                padding: "0px", // Specific side
-              },
-            }}
-          />
-        </Box>
-        <Typography ml={4}>(датум)</Typography>
-      </Box>
-      <Box display="flex" flexDirection="column" mb={1}>
-        <TextField id="standard-basic" label="" variant="standard" />
-        <Typography ml={4}>(телефон)</Typography>
-      </Box>
-      <Box display="flex" flexDirection="column" mb={1}>
-        <TextField id="standard-basic" label="" variant="standard" />
-        <Typography ml={4}>(и-мејл)</Typography>
-      </Box>
-      <Box mb={2}>
-        <SignatureCanvas
-          ref={sigCanvasRef}
-          penColor="black"
-          canvasProps={{
-            width: 250,
-            height: 100,
-            className: "sigCanvas",
-            style: { borderBottom: "1px solid #000000" },
-          }}
-        />
-        <Typography ml={4}>Потпис бирача:</Typography>
-      </Box>
-      <Button
-        onClick={() => sigCanvasRef.current.clear()}
-        sx={{
-          "@media print": { display: "none" },
-          fontFamily: robotoFontFamily,
-          mr: 1,
+    <div className="signature-box" ref={containerRef}>
+      <SignatureCanvas
+        ref={signatureRef}
+        penColor="black"
+        onEnd={onStroke}
+        canvasProps={{
+          width,
+          height: 140,
+          className: "sigCanvas",
         }}
-        variant="contained"
-      >
-        Очисти потпис
-      </Button>
-      <Button
-        onClick={() => window.print()}
-        sx={{
-          "@media print": { display: "none" },
-          fontFamily: robotoFontFamily,
-        }}
-        variant="contained"
-      >
-        Одштампај у PDF
-      </Button>
-      <Box
-        sx={{
-          "@media print": { display: "none" },
-          fontFamily: robotoFontFamily,
-        }}
-        ml={1}
-        mt={1}
-        display="flex"
-        flexDirection="row"
-        alignContent={"center"}
-      >
-        <Typography
-          variant="subtitle1"
-          component="div"
-          sx={{
-            fontFamily: robotoFontFamily,
-          }}
-          mr={1}
-        >
-          Source Code:{" "}
-        </Typography>
-        <Box>
-          <Link
-            href="https://github.com/marko7460/izbori2023"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{
-              fontFamily: robotoFontFamily,
-            }}
-          >
-            https://github.com/marko7460/izbori2023
-          </Link>
-        </Box>
-      </Box>
+      />
+    </div>
+  );
+}
+
+export default function VoterForm() {
+  const signatureRef = useRef(null);
+  const previewRef = useRef(null);
+  const fontsRef = useRef(null);
+  const previewScale = usePreviewScale(previewRef);
+
+  const [values, setValues] = useState({
+    ...EMPTY_FORM_VALUES,
+    date: dayjs().format("YYYY-MM-DD"),
+  });
+  const [signatureDataUrl, setSignatureDataUrl] = useState("");
+  const [status, setStatus] = useState(null);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const controller = new AbortController();
+
+    Promise.all([
+      fetch(`${process.env.PUBLIC_URL}/fonts/LiberationSerif-Regular.ttf`, {
+        signal: controller.signal,
+      }).then((response) => response.arrayBuffer()),
+      fetch(`${process.env.PUBLIC_URL}/fonts/LiberationSerif-Bold.ttf`, {
+        signal: controller.signal,
+      }).then((response) => response.arrayBuffer()),
+    ])
+      .then(([regular, bold]) => {
+        if (!cancelled) {
+          fontsRef.current = { regular, bold };
+        }
+      })
+      .catch((error) => {
+        if (cancelled || error.name === "AbortError") {
+          return;
+        }
+        setStatus({
+          type: "error",
+          message: "Није успело учитавање фонтова за PDF. Освежите страницу.",
+        });
+      });
+
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
+  }, []);
+
+  const formattedDate = useMemo(() => {
+    if (!values.date) {
+      return "";
+    }
+    const parsed = dayjs(values.date);
+    return parsed.isValid() ? parsed.format("DD.MM.YYYY.") : values.date;
+  }, [values.date]);
+
+  const previewValues = useMemo(
+    () => ({
+      ...values,
+      date: formattedDate,
+    }),
+    [formattedDate, values]
+  );
+
+  const emailWarning = useMemo(() => {
+    if (!values.email) {
+      return "";
+    }
+    return EMAIL_PATTERN.test(values.email)
+      ? ""
+      : "Проверите формат и-мејл адресе.";
+  }, [values.email]);
+
+  const handleChange = (field) => (event) => {
+    const nextValue =
+      field === "jmbg" ? digitsOnly(event.target.value) : event.target.value;
+    setValues((current) => ({ ...current, [field]: nextValue }));
+  };
+
+  const captureSignature = () => {
+    const canvas = signatureRef.current;
+    if (!canvas || canvas.isEmpty()) {
+      setSignatureDataUrl("");
+      return;
+    }
+    setSignatureDataUrl(canvas.getCanvas().toDataURL("image/png"));
+  };
+
+  const clearSignature = () => {
+    signatureRef.current?.clear();
+    setSignatureDataUrl("");
+  };
+
+  const missingFields = () => {
+    const missing = [];
+    if (!values.fullName.trim()) missing.push("име и презиме");
+    if (!values.parentName.trim()) missing.push("име родитеља");
+    if (!values.jmbg.trim()) missing.push("ЈМБГ");
+    if (!values.serbiaAddress.trim()) missing.push("адресу у Србији");
+    if (!values.abroadAddress.trim()) missing.push("адресу у иностранству");
+    if (!values.voteCityCountry.trim()) missing.push("град и државу гласања");
+    if (!values.date) missing.push("датум");
+    if (!values.phone.trim()) missing.push("телефон");
+    if (!values.email.trim()) missing.push("и-мејл");
+    if (!signatureDataUrl) missing.push("потпис");
+    return missing;
+  };
+
+  const savePdf = async () => {
+    if (emailWarning) {
+      setStatus({
+        type: "error",
+        message: emailWarning,
+      });
+      return;
+    }
+
+    const missing = missingFields();
+    if (missing.length > 0) {
+      const proceed = window.confirm(
+        `Нисте попунили: ${missing.join(", ")}. Ипак сачувати PDF?`
+      );
+      if (!proceed) {
+        return;
+      }
+    }
+
+    if (!fontsRef.current) {
+      setStatus({
+        type: "error",
+        message: "Фонтови за PDF још нису спремни. Сачекајте секунду и покушајте поново.",
+      });
+      return;
+    }
+
+    setBusy(true);
+    setStatus(null);
+
+    try {
+      captureSignature();
+      const signature =
+        signatureDataUrl ||
+        (signatureRef.current && !signatureRef.current.isEmpty()
+          ? signatureRef.current.getCanvas().toDataURL("image/png")
+          : "");
+
+      const pdfBytes = await generateVoterPdf(
+        {
+          ...previewValues,
+          signatureDataUrl: signature,
+        },
+        fontsRef.current
+      );
+      const filename = buildPdfFilename(values.fullName);
+      const result = await savePdfOnDevice(pdfBytes, filename);
+
+      if (result === "cancelled") {
+        setStatus({ type: "ok", message: "Чување је отказано." });
+      } else if (result === "shared") {
+        setStatus({
+          type: "ok",
+          message: "PDF је спреман за чување или слање са вашег уређаја.",
+        });
+      } else {
+        setStatus({
+          type: "ok",
+          message: "PDF је сачуван на ваш уређај. Ништа није послато на сервер.",
+        });
+      }
+    } catch (error) {
+      setStatus({
+        type: "error",
+        message: "PDF није могао да се направи. Покушајте поново или користите штампање.",
+      });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <Box className="form-shell">
+      <div className="form-flag no-print" aria-hidden="true">
+        <span className="red" />
+        <span className="blue" />
+        <span className="white" />
+      </div>
+
+      <div className="form-wrap">
+        <header className="form-hero no-print">
+          <Typography variant="h1">{FORM_TITLE}</Typography>
+          <Typography>
+            Попуните нови службени захтев за упис у бирачки списак да ћете гласати
+            у иностранству, потпишите га и сачувајте PDF на телефон или рачунар.
+          </Typography>
+        </header>
+
+        <Alert className="privacy-banner no-print" severity="success" icon={false}>
+          <strong>Подаци остају на вашем уређају.</strong>
+          Ништа се не шаље и не чува на серверу. Када сачувате PDF, фајл остаје
+          само код вас. This form never uploads your information.
+        </Alert>
+
+        <div className="layout">
+          <section className="panel no-print">
+            <Typography variant="h2" component="h2">
+              Подаци са обрасца
+            </Typography>
+
+            {FIELDS.map((field) => (
+              <div className="field" key={field.id}>
+                <TextField
+                  id={field.id}
+                  label={`${field.number}. ${field.label}`}
+                  helperText={field.helper}
+                  value={values[field.id]}
+                  onChange={handleChange(field.id)}
+                  fullWidth
+                  autoComplete={field.autoComplete}
+                  inputProps={{
+                    inputMode: field.inputMode,
+                    maxLength: field.id === "jmbg" ? 13 : undefined,
+                    "aria-describedby":
+                      field.id === "jmbg" ? "jmbg-help" : undefined,
+                  }}
+                />
+                {field.id === "jmbg" ? (
+                  <div className="jmbg-meter" id="jmbg-help" aria-hidden="true">
+                    {Array.from({ length: 13 }, (_, index) => (
+                      <span
+                        key={index}
+                        className={values.jmbg[index] ? "filled" : ""}
+                      />
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            ))}
+
+            <div className="field">
+              <TextField
+                id="date"
+                label="Датум"
+                type="date"
+                value={values.date}
+                onChange={handleChange("date")}
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+              />
+            </div>
+            <div className="field">
+              <TextField
+                id="phone"
+                label="Контакт телефон"
+                type="tel"
+                autoComplete="tel"
+                value={values.phone}
+                onChange={handleChange("phone")}
+                fullWidth
+              />
+            </div>
+            <div className="field">
+              <TextField
+                id="email"
+                label="И-мејл"
+                type="email"
+                autoComplete="email"
+                value={values.email}
+                onChange={handleChange("email")}
+                error={Boolean(emailWarning)}
+                helperText={emailWarning || " "}
+                fullWidth
+              />
+            </div>
+
+            <Typography variant="subtitle1" component="p" sx={{ mb: 1 }}>
+              Потпис
+            </Typography>
+            <SignatureField
+              signatureRef={signatureRef}
+              onStroke={captureSignature}
+            />
+            <div className="actions">
+              <Button variant="outlined" onClick={clearSignature}>
+                Очисти потпис
+              </Button>
+              <Button
+                variant="contained"
+                onClick={savePdf}
+                disabled={busy}
+                data-testid="save-pdf"
+              >
+                {busy ? "Правим PDF…" : "Сачувај PDF на уређај"}
+              </Button>
+              <Button variant="outlined" onClick={() => window.print()}>
+                Одштампај
+              </Button>
+            </div>
+            {status ? (
+              <p
+                className={status.type === "error" ? "status-error" : "status-ok"}
+                role="status"
+              >
+                {status.message}
+              </p>
+            ) : null}
+          </section>
+
+          <section className="preview-column panel">
+            <Typography variant="h2" component="h2" className="no-print">
+              Преглед службеног обрасца
+            </Typography>
+            <div className="preview-frame" ref={previewRef}>
+              <OfficialDocument
+                values={previewValues}
+                signatureDataUrl={signatureDataUrl}
+                scale={previewScale}
+              />
+            </div>
+
+            <div className="actions no-print">
+              <Button variant="contained" onClick={savePdf} disabled={busy}>
+                {busy ? "Правим PDF…" : "Сачувај PDF на уређај"}
+              </Button>
+              <Button variant="outlined" onClick={() => window.print()}>
+                Одштампај
+              </Button>
+            </div>
+
+            <div className="fine-print no-print">
+              {NOTE_LINES.join(" ")}
+            </div>
+            <div className="source-link no-print">
+              Изворни код:{" "}
+              <Link
+                href="https://github.com/marko7460/izbori2023"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                github.com/marko7460/izbori2023
+              </Link>
+            </div>
+          </section>
+        </div>
+      </div>
     </Box>
   );
 }

@@ -1,6 +1,6 @@
 {
-  "short_name": "Пријава_за_гласање_2023",
-  "name": "Пријава за гласање 2023",
+  "short_name": "Гласање у иностранству",
+  "name": "Захтев за гласање у иностранству",
   "icons": [
     {
       "src": "favicon.ico",
@@ -10,6 +10,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#0c4076",
+  "background_color": "#f3efe6"
 }
