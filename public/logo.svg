@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="glasajmo.org">
+  <rect width="512" height="512" fill="#0c4076"/>
+  <rect width="512" height="52" fill="#f3efe6"/>
+  <rect x="0" y="18" width="170.67" height="16" fill="#c6363c"/>
+  <rect x="170.67" y="18" width="170.67" height="16" fill="#0c4076"/>
+  <rect x="341.33" y="18" width="170.67" height="16" fill="#ffffff"/>
+  <rect x="72" y="96" width="368" height="352" rx="48" fill="#0a3460"/>
+  <rect x="156" y="140" width="200" height="260" rx="18" fill="#ffffff"/>
+  <polygon points="320,140 356,176 320,176" fill="#f3efe6"/>
+  <rect x="186" y="210" width="140" height="10" rx="5" fill="#c8cdd2"/>
+  <rect x="186" y="246" width="140" height="10" rx="5" fill="#c8cdd2"/>
+  <rect x="186" y="282" width="140" height="10" rx="5" fill="#c8cdd2"/>
+  <circle cx="300" cy="360" r="48" fill="#c6363c"/>
+  <path d="M278 360 l16 18 30-34" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
