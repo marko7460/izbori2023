@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 import OfficialDocument from "./OfficialDocument";
 import { EMPTY_FORM_VALUES, FIELDS, FORM_TITLE, NOTE_LINES } from "./lib/formCopy";
 import { buildPdfFilename, generateVoterPdf } from "./lib/generatePdf";
-import { digitsOnly, isCompleteJmbg, isValidJmbg } from "./lib/jmbg";
+import { digitsOnly } from "./lib/jmbg";
 import { PAGE_WIDTH_PX } from "./lib/pageSize";
 import { savePdfOnDevice } from "./lib/savePdf";
 import "./VoterForm.css";
@@ -139,19 +139,6 @@ export default function VoterForm() {
     [formattedDate, values]
   );
 
-  const jmbgWarning = useMemo(() => {
-    if (!values.jmbg) {
-      return "";
-    }
-    if (!isCompleteJmbg(values.jmbg)) {
-      return "ЈМБГ мора имати тачно 13 цифара.";
-    }
-    if (!isValidJmbg(values.jmbg)) {
-      return "Унети ЈМБГ не пролази контролни број. Проверите цифре.";
-    }
-    return "";
-  }, [values.jmbg]);
-
   const emailWarning = useMemo(() => {
     if (!values.email) {
       return "";
@@ -185,7 +172,7 @@ export default function VoterForm() {
     const missing = [];
     if (!values.fullName.trim()) missing.push("име и презиме");
     if (!values.parentName.trim()) missing.push("име родитеља");
-    if (!isCompleteJmbg(values.jmbg)) missing.push("ЈМБГ");
+    if (!values.jmbg.trim()) missing.push("ЈМБГ");
     if (!values.serbiaAddress.trim()) missing.push("адресу у Србији");
     if (!values.abroadAddress.trim()) missing.push("адресу у иностранству");
     if (!values.voteCityCountry.trim()) missing.push("град и државу гласања");
@@ -197,10 +184,10 @@ export default function VoterForm() {
   };
 
   const savePdf = async () => {
-    if (emailWarning || (values.jmbg && !isCompleteJmbg(values.jmbg))) {
+    if (emailWarning) {
       setStatus({
         type: "error",
-        message: emailWarning || jmbgWarning,
+        message: emailWarning,
       });
       return;
     }
@@ -301,12 +288,7 @@ export default function VoterForm() {
                 <TextField
                   id={field.id}
                   label={`${field.number}. ${field.label}`}
-                  helperText={
-                    field.id === "jmbg"
-                      ? jmbgWarning || field.helper
-                      : field.helper
-                  }
-                  error={field.id === "jmbg" ? Boolean(jmbgWarning) : false}
+                  helperText={field.helper}
                   value={values[field.id]}
                   onChange={handleChange(field.id)}
                   fullWidth
