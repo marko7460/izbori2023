@@ -45,7 +45,6 @@
     ]
   },
   "devDependencies": {
-    "jest-canvas-mock": "^2.5.8",
-    "puppeteer": "^25.10.0"
+    "jest-canvas-mock": "^2.5.8"
   }
 }
