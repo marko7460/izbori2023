@@ -39,6 +39,11 @@ test("renders the new abroad voting request and keeps data on-device", () => {
     screen.getByLabelText(/јединствени матични број грађана/i)
   ).toBeInTheDocument();
   expect(screen.getByText(/подаци остају на вашем уређају/i)).toBeInTheDocument();
+  expect(screen.getByText(/27\. децембра 2026/i)).toBeInTheDocument();
+  expect(screen.getByText(/5\. децембар 2026/i)).toBeInTheDocument();
+  expect(
+    screen.getByRole("link", { name: /провера бирачког списка/i })
+  ).toHaveAttribute("href", "https://upit.birackispisak.gov.rs/");
   expect(screen.getByTestId("save-pdf")).toBeInTheDocument();
   expect(screen.getByTestId("official-document")).toBeInTheDocument();
   expect(screen.queryByLabelText(/место рођења/i)).not.toBeInTheDocument();

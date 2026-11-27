@@ -5,7 +5,7 @@ Client-side helper for the official Serbian request to be listed as voting abroa
 
 **Live site:** [glasajmo.org](https://glasajmo.org/)
 
-Fill the form, sign it, and save a PDF on your phone or computer. The PDF is built in the browser. Nothing is uploaded or stored on a server.
+For the presidential election on 27 December 2026, the request has to reach a diplomatic-consular mission by **5 December 2026 at midnight, Serbia time**. Submit it again even if you voted abroad in an earlier election. The PDF is built in the browser. Nothing is uploaded or stored on a server.
 
 Попуните службени захтев, потпишите га и сачувајте PDF на свој уређај. Подаци остају код вас.
 
