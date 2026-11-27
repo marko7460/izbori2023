@@ -11,7 +11,7 @@ For the presidential election on 27 December 2026, the request has to reach a di
 
 ## What it does
 
-- Collects the fields from the current official document, including parent’s name and a 13-digit JMBG drawn into character boxes
+- Collects the five fields on the presidential-election form: name, one parent’s name, a 13-digit JMBG in character boxes, the address in Serbia, and the city and country where you will vote. It does not ask for an address abroad. The signature line reads „својеручни потпис“.
 - Shows a live A4 preview of the filled form
 - Lets you sign on a canvas
 - Saves a one-page PDF locally (`Сачувај PDF на уређај`): share sheet on phones, download on laptops

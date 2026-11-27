@@ -181,7 +181,6 @@ export default function VoterForm() {
     if (!values.parentName.trim()) missing.push("име родитеља");
     if (!values.jmbg.trim()) missing.push("ЈМБГ");
     if (!values.serbiaAddress.trim()) missing.push("адресу у Србији");
-    if (!values.abroadAddress.trim()) missing.push("адресу у иностранству");
     if (!values.voteCityCountry.trim()) missing.push("град и државу гласања");
     if (!values.date) missing.push("датум");
     if (!values.phone.trim()) missing.push("телефон");

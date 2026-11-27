@@ -53,15 +53,8 @@ export const FIELDS = [
     autoComplete: "off",
   },
   {
-    id: "abroadAddress",
-    number: "5",
-    label: "Адреса боравка у иностранству",
-    helper: "Улица, број, град, држава",
-    autoComplete: "street-address",
-  },
-  {
     id: "voteCityCountry",
-    number: "6",
+    number: "5",
     label: "Град, држава – где желим да гласам у иностранству",
     helper: "Град, па држава. Нпр. Франкфурт, Немачка",
     autoComplete: "off",
@@ -79,7 +72,7 @@ export const NOTE_LINES = [
 
 export const LABELS = {
   date: "(датум)",
-  signature: "(потпис)",
+  signature: "(својеручни потпис)",
   phone: "(контакт телефон)",
   email: "(и-мејл)",
 };
@@ -89,7 +82,6 @@ export const EMPTY_FORM_VALUES = {
   parentName: "",
   jmbg: "",
   serbiaAddress: "",
-  abroadAddress: "",
   voteCityCountry: "",
   date: "",
   phone: "",
@@ -101,7 +93,6 @@ export const REQUIRED_FIELD_IDS = [
   "parentName",
   "jmbg",
   "serbiaAddress",
-  "abroadAddress",
   "voteCityCountry",
   "date",
   "phone",
