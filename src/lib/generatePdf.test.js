@@ -32,7 +32,6 @@ describe("generateVoterPdf", () => {
         parentName: "Јован",
         jmbg: "0101990710121",
         serbiaAddress: "Кнеза Милоша 1, Београд",
-        abroadAddress: "Main Street 10, Berlin",
         voteCityCountry: "Берлин, Немачка",
         date: "10.09.2026.",
         phone: "+49 151 000000",

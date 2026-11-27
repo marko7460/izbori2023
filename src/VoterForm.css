@@ -44,13 +44,23 @@
   max-width: 62ch;
 }
 
+.deadline-banner {
+  border-radius: 12px;
+  margin: 16px 0 0;
+}
+
+.deadline-banner strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
 .privacy-banner {
   background: #e8f2ea;
   border: 1px solid #b7d3be;
   color: #1e4d2b;
   border-radius: 12px;
   padding: 12px 14px;
-  margin: 16px 0 20px;
+  margin: 12px 0 20px;
 }
 
 .privacy-banner strong {

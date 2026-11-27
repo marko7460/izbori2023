@@ -10,7 +10,14 @@ import {
 import SignatureCanvas from "react-signature-canvas";
 import dayjs from "dayjs";
 import OfficialDocument from "./OfficialDocument";
-import { EMPTY_FORM_VALUES, FIELDS, FORM_TITLE, NOTE_LINES } from "./lib/formCopy";
+import {
+  DEADLINE,
+  ELECTION_SUMMARY,
+  EMPTY_FORM_VALUES,
+  FIELDS,
+  FORM_TITLE,
+  NOTE_LINES,
+} from "./lib/formCopy";
 import { buildPdfFilename, generateVoterPdf } from "./lib/generatePdf";
 import { digitsOnly } from "./lib/jmbg";
 import { PAGE_WIDTH_PX } from "./lib/pageSize";
@@ -174,7 +181,6 @@ export default function VoterForm() {
     if (!values.parentName.trim()) missing.push("име родитеља");
     if (!values.jmbg.trim()) missing.push("ЈМБГ");
     if (!values.serbiaAddress.trim()) missing.push("адресу у Србији");
-    if (!values.abroadAddress.trim()) missing.push("адресу у иностранству");
     if (!values.voteCityCountry.trim()) missing.push("град и државу гласања");
     if (!values.date) missing.push("датум");
     if (!values.phone.trim()) missing.push("телефон");
@@ -266,10 +272,18 @@ export default function VoterForm() {
         <header className="form-hero no-print">
           <Typography variant="h1">{FORM_TITLE}</Typography>
           <Typography>
-            Попуните нови службени захтев за упис у бирачки списак да ћете гласати
-            у иностранству, потпишите га и сачувајте PDF на телефон или рачунар.
+            {ELECTION_SUMMARY} Попуните га, потпишите и сачувајте PDF на телефон или
+            рачунар.
           </Typography>
         </header>
+
+        <Alert className="deadline-banner no-print" severity="warning">
+          <strong>{DEADLINE.title}</strong>
+          {DEADLINE.body}{" "}
+          <Link href={DEADLINE.registerUrl} target="_blank" rel="noopener noreferrer">
+            {DEADLINE.registerLabel}
+          </Link>
+        </Alert>
 
         <Alert className="privacy-banner no-print" severity="success" icon={false}>
           <strong>Подаци остају на вашем уређају.</strong>
@@ -344,7 +358,7 @@ export default function VoterForm() {
                 value={values.email}
                 onChange={handleChange("email")}
                 error={Boolean(emailWarning)}
-                helperText={emailWarning || " "}
+                helperText={emailWarning || "За пријем решења"}
                 fullWidth
               />
             </div>

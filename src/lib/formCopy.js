@@ -1,5 +1,16 @@
 export const FORM_TITLE = "Захтев за гласање у иностранству";
 
+export const ELECTION_SUMMARY =
+  "Захтев за упис у бирачки списак да ћете гласати у иностранству на изборима за председника Републике Србије, 27. децембра 2026.";
+
+export const DEADLINE = {
+  title: "Рок је 5. децембар 2026. у поноћ, по времену у Србији.",
+  body:
+    "Захтев поднесите и ако сте на ранијим изборима већ гласали у иностранству. Уз потписан PDF приложите копију важећег пасоша или личне карте и пошаљите дипломатско-конзуларном представништву. Пре слања проверите да ли сте уписани у Јединствени бирачки списак.",
+  registerUrl: "https://upit.birackispisak.gov.rs/",
+  registerLabel: "Провера бирачког списка",
+};
+
 export const HEADER_LINES = [
   "У складу са чланом 16. став 1. Закона о Јединственом бирачком списку („Службени",
   "гласник Републике Србије“ број 104/09,  99/11, 44/24 и 96/25) подносим:",
@@ -38,21 +49,14 @@ export const FIELDS = [
     id: "serbiaAddress",
     number: "4",
     label: "Адреса пребивалишта у Р. Србији",
-    helper: "Улица, број, место",
+    helper: "Општина или град, улица и број",
     autoComplete: "off",
   },
   {
-    id: "abroadAddress",
-    number: "5",
-    label: "Адреса боравка у иностранству",
-    helper: "Улица, број, град, држава",
-    autoComplete: "street-address",
-  },
-  {
     id: "voteCityCountry",
-    number: "6",
+    number: "5",
     label: "Град, држава – где желим да гласам у иностранству",
-    helper: "Нпр. Франкфурт, Немачка",
+    helper: "Град, па држава. Нпр. Франкфурт, Немачка",
     autoComplete: "off",
   },
 ];
@@ -68,7 +72,7 @@ export const NOTE_LINES = [
 
 export const LABELS = {
   date: "(датум)",
-  signature: "(потпис)",
+  signature: "(својеручни потпис)",
   phone: "(контакт телефон)",
   email: "(и-мејл)",
 };
@@ -78,7 +82,6 @@ export const EMPTY_FORM_VALUES = {
   parentName: "",
   jmbg: "",
   serbiaAddress: "",
-  abroadAddress: "",
   voteCityCountry: "",
   date: "",
   phone: "",
@@ -90,7 +93,6 @@ export const REQUIRED_FIELD_IDS = [
   "parentName",
   "jmbg",
   "serbiaAddress",
-  "abroadAddress",
   "voteCityCountry",
   "date",
   "phone",

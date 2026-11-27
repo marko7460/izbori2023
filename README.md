@@ -5,13 +5,13 @@ Client-side helper for the official Serbian request to be listed as voting abroa
 
 **Live site:** [glasajmo.org](https://glasajmo.org/)
 
-Fill the form, sign it, and save a PDF on your phone or computer. The PDF is built in the browser. Nothing is uploaded or stored on a server.
+For the presidential election on 27 December 2026, the request has to reach a diplomatic-consular mission by **5 December 2026 at midnight, Serbia time**. Submit it again even if you voted abroad in an earlier election. The PDF is built in the browser. Nothing is uploaded or stored on a server.
 
 Попуните службени захтев, потпишите га и сачувајте PDF на свој уређај. Подаци остају код вас.
 
 ## What it does
 
-- Collects the fields from the current official document, including parent’s name and a 13-digit JMBG drawn into character boxes
+- Collects the five fields on the presidential-election form: name, one parent’s name, a 13-digit JMBG in character boxes, the address in Serbia, and the city and country where you will vote. It does not ask for an address abroad. The signature line reads „својеручни потпис“.
 - Shows a live A4 preview of the filled form
 - Lets you sign on a canvas
 - Saves a one-page PDF locally (`Сачувај PDF на уређај`): share sheet on phones, download on laptops

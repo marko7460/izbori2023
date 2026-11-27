@@ -62,25 +62,29 @@ function asFontBytes(input) {
   return new Uint8Array(input);
 }
 
+// Box edges from the presidential-election form, left side of each vertical rule.
+const JMBG_EDGES = [
+  326.1, 345.1, 363.6, 382.6, 400.6, 419.1, 438.2, 456.2, 474.7, 493.7, 512.2,
+  530.2, 548.7, 567.8,
+];
+
 function jmbgBoxCenters() {
-  const edges = [
-    292.5, 311.5, 330.5, 348.5, 367.5, 386.5, 405.5, 423.5, 442.5, 461.5,
-    480.5, 498.5, 517.5, 540.5,
-  ];
-  return edges.slice(0, -1).map((start, index) => (start + edges[index + 1]) / 2);
+  return JMBG_EDGES.slice(0, -1).map(
+    (start, index) => (start + JMBG_EDGES[index + 1]) / 2
+  );
 }
 
 function drawFormChrome(page, regularFont, boldFont) {
   page.drawText(HEADER_LINES[0], {
     x: 72,
-    y: toPdfY(85.8),
+    y: toPdfY(85.1),
     size: 12,
     font: regularFont,
     color: INK,
   });
   page.drawText(HEADER_LINES[1], {
     x: 72,
-    y: toPdfY(99.6),
+    y: toPdfY(98.6),
     size: 12,
     font: regularFont,
     color: INK,
@@ -93,131 +97,127 @@ function drawFormChrome(page, regularFont, boldFont) {
 
   page.drawText(TITLE_LINES[0], {
     x: titleXs[0],
-    y: toPdfY(140.99),
+    y: toPdfY(139.1),
     size: 12,
     font: boldFont,
     color: INK,
   });
   page.drawText(TITLE_LINES[1], {
     x: titleXs[1],
-    y: toPdfY(154.79),
+    y: toPdfY(152.6),
     size: 12,
     font: boldFont,
     color: INK,
   });
   page.drawText(TITLE_LINES[2], {
     x: titleXs[2],
-    y: toPdfY(168.59),
+    y: toPdfY(166.1),
     size: 12,
     font: boldFont,
     color: INK,
   });
 
   page.drawText("1. Име и презиме", {
-    x: 82.5,
-    y: toPdfY(229.04),
+    x: 122.2,
+    y: toPdfY(220.1),
     size: 12,
     font: regularFont,
     color: INK,
   });
   page.drawText("2. Име једног родитеља", {
-    x: 82.5,
-    y: toPdfY(253.34),
+    x: 122.2,
+    y: toPdfY(235.8),
     size: 12,
     font: regularFont,
     color: INK,
   });
   page.drawText("3. Јединствени матични број грађана", {
-    x: 82.5,
-    y: toPdfY(303.43),
+    x: 122.2,
+    y: toPdfY(267.3),
     size: 12,
     font: regularFont,
     color: INK,
   });
   page.drawText("4. Адреса пребивалишта у Р. Србији", {
-    x: 82.5,
-    y: toPdfY(330.78),
+    x: 122.2,
+    y: toPdfY(283.1),
     size: 12,
     font: regularFont,
     color: INK,
   });
-  page.drawText("5. Адреса боравка у иностранству", {
-    x: 82.5,
-    y: toPdfY(355.83),
+  page.drawText("5. Град, држава – где желим да гласам у", {
+    x: 122.2,
+    y: toPdfY(298.8),
     size: 12,
     font: regularFont,
     color: INK,
   });
-  page.drawText("6. Град, држава – где желим да гласам", {
-    x: 82.5,
-    y: toPdfY(380.88),
-    size: 12,
-    font: regularFont,
-    color: INK,
-  });
-  page.drawText("у иностранству", {
-    x: 102,
-    y: toPdfY(394.68),
+  page.drawText("иностранству", {
+    x: 132.7,
+    y: toPdfY(312.3),
     size: 12,
     font: regularFont,
     color: INK,
   });
 
-  drawLine(page, 293, toPdfY(234.5), 541, toPdfY(234.5));
-  drawLine(page, 293, toPdfY(259.5), 541, toPdfY(259.5));
-  drawLine(page, 292, toPdfY(284.5), 541, toPdfY(284.5));
-  drawLine(page, 292, toPdfY(311.5), 541, toPdfY(311.5));
-  drawLine(page, 293, toPdfY(336.5), 541, toPdfY(336.5));
-  drawLine(page, 293, toPdfY(361.5), 541, toPdfY(361.5));
-  drawLine(page, 293, toPdfY(387.5), 541, toPdfY(387.5));
+  const ruleRight = 567.3;
+  drawLine(page, 327.1, toPdfY(221.1), ruleRight, toPdfY(221.1));
+  drawLine(page, 327.1, toPdfY(237.1), ruleRight, toPdfY(237.1));
+  drawLine(page, 327.1, toPdfY(284.4), ruleRight, toPdfY(284.4));
+  drawLine(page, 327.1, toPdfY(312.7), ruleRight, toPdfY(312.7));
 
-  const jmbgTop = toPdfY(284.5);
-  const jmbgBottom = toPdfY(311.5);
-  [
-    292.5, 311.5, 330.5, 348.5, 367.5, 386.5, 405.5, 423.5, 442.5, 461.5, 480.5,
-    498.5, 517.5, 540.5,
-  ].forEach((x) => {
+  const jmbgTop = toPdfY(252.5);
+  const jmbgBottom = toPdfY(268.5);
+  JMBG_EDGES.forEach((x) => {
     drawLine(page, x, jmbgBottom, x, jmbgTop);
   });
+  drawLine(page, JMBG_EDGES[0], jmbgTop, JMBG_EDGES[JMBG_EDGES.length - 1], jmbgTop);
+  drawLine(
+    page,
+    JMBG_EDGES[0],
+    jmbgBottom,
+    JMBG_EDGES[JMBG_EDGES.length - 1],
+    jmbgBottom
+  );
 
   page.drawText(PASSPORT_NOTE, {
-    x: 72,
-    y: toPdfY(453.63),
+    x: 102.7,
+    y: toPdfY(373.8),
     size: 12,
     font: regularFont,
     color: INK,
   });
 
-  drawLine(page, 129, toPdfY(493.5), 280, toPdfY(493.5));
-  drawLine(page, 344, toPdfY(518.5), 541, toPdfY(518.5));
-  drawLine(page, 344, toPdfY(564.5), 541, toPdfY(564.5));
-  drawLine(page, 344, toPdfY(614.5), 541, toPdfY(614.5));
-  drawLine(page, 129, toPdfY(683.5), 541, toPdfY(683.5));
+  drawLine(page, 164.1, toPdfY(408.9), 246.9, toPdfY(408.9));
+  drawLine(page, 377.5, toPdfY(424.3), ruleRight, toPdfY(424.3));
+  drawLine(page, 377.5, toPdfY(459.8), ruleRight, toPdfY(459.8));
+  drawLine(page, 377.5, toPdfY(506.1), ruleRight, toPdfY(506.1));
+  drawLine(page, 377.5, toPdfY(566.2), ruleRight, toPdfY(566.2));
 
   page.drawText(LABELS.date, {
-    x: 129,
-    y: toPdfY(512.43),
+    x: 191.6,
+    y: toPdfY(421.4),
     size: 10,
     font: regularFont,
     color: INK,
   });
   page.drawText(LABELS.signature, {
-    x: 425.75,
-    y: toPdfY(534.78),
+    x: 434,
+    y: toPdfY(436.2),
     size: 9,
     font: regularFont,
     color: INK,
   });
   page.drawText(LABELS.phone, {
-    x: 394,
-    y: toPdfY(580.68),
+    x: 437.9,
+    y: toPdfY(471.4),
     size: 9,
     font: regularFont,
     color: INK,
   });
   page.drawText(LABELS.email, {
-    x: 425,
-    y: toPdfY(631.02),
+    x: 456.5,
+    y: toPdfY(517.9),
     size: 9,
     font: regularFont,
     color: INK,
@@ -226,7 +226,7 @@ function drawFormChrome(page, regularFont, boldFont) {
   NOTE_LINES.forEach((line, index) => {
     page.drawText(line, {
       x: 72,
-      y: toPdfY(711.02 + index * 10.35),
+      y: toPdfY(594.4 + index * 11.25),
       size: 9,
       font: regularFont,
       color: INK,
@@ -249,15 +249,15 @@ async function embedSignature(pdfDoc, page, signatureDataUrl) {
     ? await pdfDoc.embedJpg(bytes)
     : await pdfDoc.embedPng(bytes);
 
-  const maxWidth = 180;
-  const maxHeight = 48;
+  const maxWidth = 175;
+  const maxHeight = 28;
   const scale = Math.min(maxWidth / image.width, maxHeight / image.height);
   const width = image.width * scale;
   const height = image.height * scale;
 
   page.drawImage(image, {
-    x: 352,
-    y: toPdfY(518.5),
+    x: 382,
+    y: toPdfY(424.3),
     width,
     height,
   });
@@ -278,13 +278,13 @@ export async function generateVoterPdf(values, fonts) {
 
   drawFormChrome(page, regularFont, boldFont);
 
-  const fieldWidth = 244;
+  const fieldWidth = 232;
   drawFittedText(
     page,
     regularFont,
     values.fullName,
-    297,
-    toPdfY(232.5),
+    331,
+    toPdfY(219),
     fieldWidth,
     12
   );
@@ -292,8 +292,8 @@ export async function generateVoterPdf(values, fonts) {
     page,
     regularFont,
     values.parentName,
-    297,
-    toPdfY(257.5),
+    331,
+    toPdfY(235),
     fieldWidth,
     12
   );
@@ -301,17 +301,8 @@ export async function generateVoterPdf(values, fonts) {
     page,
     regularFont,
     values.serbiaAddress,
-    297,
-    toPdfY(334.5),
-    fieldWidth,
-    12
-  );
-  drawFittedText(
-    page,
-    regularFont,
-    values.abroadAddress,
-    297,
-    toPdfY(359.5),
+    331,
+    toPdfY(282.2),
     fieldWidth,
     12
   );
@@ -319,8 +310,8 @@ export async function generateVoterPdf(values, fonts) {
     page,
     regularFont,
     values.voteCityCountry,
-    297,
-    toPdfY(385.5),
+    331,
+    toPdfY(310.5),
     fieldWidth,
     12
   );
@@ -335,16 +326,16 @@ export async function generateVoterPdf(values, fonts) {
     const width = regularFont.widthOfTextAtSize(digit, size);
     page.drawText(digit, {
       x: center - width / 2,
-      y: toPdfY(305.5),
+      y: toPdfY(264.5),
       size,
       font: regularFont,
       color: INK,
     });
   });
 
-  drawFittedText(page, regularFont, values.date, 140, toPdfY(491.5), 180, 12);
-  drawFittedText(page, regularFont, values.phone, 350, toPdfY(562.5), 185, 11);
-  drawFittedText(page, regularFont, values.email, 350, toPdfY(612.5), 185, 11);
+  drawFittedText(page, regularFont, values.date, 168, toPdfY(406.7), 74, 12);
+  drawFittedText(page, regularFont, values.phone, 382, toPdfY(457.6), 180, 11);
+  drawFittedText(page, regularFont, values.email, 382, toPdfY(503.9), 180, 11);
 
   await embedSignature(pdfDoc, page, values.signatureDataUrl);
 

@@ -34,47 +34,49 @@
 }
 
 .official-title-1 {
-  top: 127.7pt;
+  top: 126.9pt;
 }
 
 .official-title-2 {
-  top: 141.5pt;
+  top: 140.4pt;
 }
 
 .official-title-3 {
-  top: 155.3pt;
+  top: 153.9pt;
+}
+
+.official-label-1,
+.official-label-2,
+.official-label-3,
+.official-label-4,
+.official-label-5 {
+  left: 122.2pt;
 }
 
 .official-label-1 {
-  left: 82.5pt;
-  top: 215.7pt;
+  top: 208.1pt;
 }
 
 .official-label-2 {
-  left: 82.5pt;
-  top: 240pt;
+  top: 223.8pt;
 }
 
 .official-label-3 {
-  left: 82.5pt;
-  top: 290.1pt;
+  top: 255.3pt;
 }
 
 .official-label-4 {
-  left: 82.5pt;
-  top: 317.5pt;
+  top: 271.1pt;
 }
 
 .official-label-5 {
-  left: 82.5pt;
-  top: 342.5pt;
+  top: 286.8pt;
+  white-space: normal;
+  width: 220pt;
 }
 
-.official-label-6 {
-  left: 82.5pt;
-  top: 367.6pt;
-  white-space: normal;
-  width: 210pt;
+.official-label-5-cont {
+  padding-left: 10.5pt;
 }
 
 .official-line {
@@ -86,38 +88,33 @@
 .official-line-1,
 .official-line-2,
 .official-line-4,
-.official-line-5,
-.official-line-6 {
-  left: 293pt;
-  width: 248pt;
+.official-line-5 {
+  left: 327.1pt;
+  width: 240.2pt;
 }
 
 .official-line-1 {
-  top: 234.5pt;
+  top: 221.1pt;
 }
 
 .official-line-2 {
-  top: 259.5pt;
+  top: 237.1pt;
 }
 
 .official-line-4 {
-  top: 336.5pt;
+  top: 284.4pt;
 }
 
 .official-line-5 {
-  top: 361.5pt;
-}
-
-.official-line-6 {
-  top: 387.5pt;
+  top: 312.7pt;
 }
 
 .official-jmbg {
   position: absolute;
-  left: 292.5pt;
-  top: 284.5pt;
-  width: 248pt;
-  height: 27pt;
+  left: 326.1pt;
+  top: 252.5pt;
+  width: 241.7pt;
+  height: 16pt;
   display: flex;
   border: 1pt solid #000;
   box-sizing: border-box;
@@ -134,135 +131,129 @@
 
 .official-jmbg-cell:last-child {
   border-right: 0;
-  flex: 1.2;
 }
 
 .official-value {
-  left: 297pt;
-  width: 240pt;
+  left: 331pt;
+  width: 232pt;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .official-value-1 {
-  top: 218pt;
+  top: 207.6pt;
 }
 
 .official-value-2 {
-  top: 243pt;
+  top: 223.6pt;
 }
 
 .official-value-4 {
-  top: 320pt;
+  top: 270.9pt;
 }
 
 .official-value-5 {
-  top: 345pt;
-}
-
-.official-value-6 {
-  top: 371pt;
+  top: 299.2pt;
 }
 
 .official-passport {
-  left: 72pt;
-  top: 440.3pt;
+  left: 102.7pt;
+  top: 361.8pt;
   white-space: normal;
   width: 450pt;
 }
 
 .official-line-date {
-  left: 129pt;
-  top: 493.5pt;
-  width: 151pt;
+  left: 164.1pt;
+  top: 408.9pt;
+  width: 82.8pt;
 }
 
 .official-line-sign,
 .official-line-phone,
-.official-line-email {
-  left: 344pt;
-  width: 197pt;
+.official-line-email,
+.official-line-tail {
+  left: 377.5pt;
+  width: 189.8pt;
 }
 
 .official-line-sign {
-  top: 518.5pt;
+  top: 424.3pt;
 }
 
 .official-line-phone {
-  top: 564.5pt;
+  top: 459.8pt;
 }
 
 .official-line-email {
-  top: 614.5pt;
+  top: 506.1pt;
 }
 
-.official-line-note {
-  left: 129pt;
-  top: 683.5pt;
-  width: 412pt;
+.official-line-tail {
+  top: 566.2pt;
 }
 
 .official-caption-date {
-  left: 129pt;
-  top: 499pt;
+  left: 191.6pt;
+  top: 411.4pt;
   font-size: 10pt;
 }
 
 .official-caption-sign {
-  left: 425.75pt;
-  top: 524.8pt;
+  left: 434pt;
+  top: 427pt;
   font-size: 9pt;
 }
 
 .official-caption-phone {
-  left: 394pt;
-  top: 570.7pt;
+  left: 437.9pt;
+  top: 462.4pt;
   font-size: 9pt;
 }
 
 .official-caption-email {
-  left: 425pt;
-  top: 621pt;
+  left: 456.5pt;
+  top: 508.9pt;
   font-size: 9pt;
 }
 
 .official-date-value {
-  left: 140pt;
-  top: 476pt;
-  width: 180pt;
+  left: 168pt;
+  top: 395.4pt;
+  width: 74pt;
 }
 
 .official-phone-value,
 .official-email-value {
-  left: 350pt;
-  width: 185pt;
+  left: 382pt;
+  width: 180pt;
 }
 
 .official-phone-value {
-  top: 548pt;
+  top: 446.3pt;
   font-size: 11pt;
 }
 
 .official-email-value {
-  top: 598pt;
+  top: 492.6pt;
   font-size: 11pt;
 }
 
 .official-signature {
   position: absolute;
-  left: 352pt;
-  top: 470pt;
-  width: 180pt;
-  height: 48pt;
+  left: 382pt;
+  top: 396.3pt;
+  width: 175pt;
+  height: 28pt;
   object-fit: contain;
   object-position: left bottom;
 }
 
 .official-note {
   left: 72pt;
-  top: 701pt;
+  top: 586.4pt;
   width: 454pt;
   font-size: 9pt;
   white-space: normal;
-  line-height: 1.15;
+  line-height: 1.26;
 }
