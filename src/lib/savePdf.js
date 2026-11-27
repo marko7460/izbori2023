@@ -2,7 +2,11 @@ function isMobileDevice() {
   if (typeof navigator === "undefined") {
     return false;
   }
-  return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "");
+  const userAgent = navigator.userAgent || "";
+  if (/Mobi|Android|iPhone|iPad|iPod/i.test(userAgent)) {
+    return true;
+  }
+  return /Macintosh/i.test(userAgent) && (navigator.maxTouchPoints || 0) > 1;
 }
 
 export async function savePdfOnDevice(pdfBytes, filename) {

@@ -4,11 +4,16 @@ describe("savePdfOnDevice", () => {
   const originalCanShare = navigator.canShare;
   const originalShare = navigator.share;
   const originalUserAgent = navigator.userAgent;
+  const originalMaxTouchPoints = navigator.maxTouchPoints;
 
   afterEach(() => {
     Object.defineProperty(navigator, "userAgent", {
       configurable: true,
       value: originalUserAgent,
+    });
+    Object.defineProperty(navigator, "maxTouchPoints", {
+      configurable: true,
+      value: originalMaxTouchPoints,
     });
     navigator.canShare = originalCanShare;
     navigator.share = originalShare;
@@ -49,6 +54,30 @@ describe("savePdfOnDevice", () => {
     expect(Object.keys(share.mock.calls[0][0])).toEqual(["files"]);
     expect(share.mock.calls[0][0].files).toHaveLength(1);
     expect(share.mock.calls[0][0].files[0].name).toBe("form.pdf");
+    expect(click).not.toHaveBeenCalled();
+  });
+
+  test("uses share sheet on iPadOS Safari reporting a Macintosh user agent", async () => {
+    Object.defineProperty(navigator, "userAgent", {
+      configurable: true,
+      value:
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15",
+    });
+    Object.defineProperty(navigator, "maxTouchPoints", {
+      configurable: true,
+      value: 5,
+    });
+    const share = jest.fn().mockResolvedValue(undefined);
+    navigator.canShare = jest.fn(() => true);
+    navigator.share = share;
+    const click = jest
+      .spyOn(HTMLAnchorElement.prototype, "click")
+      .mockImplementation(() => {});
+
+    const result = await savePdfOnDevice(new Uint8Array([1, 2, 3]), "form.pdf");
+
+    expect(result).toBe("shared");
+    expect(share).toHaveBeenCalledTimes(1);
     expect(click).not.toHaveBeenCalled();
   });
 });

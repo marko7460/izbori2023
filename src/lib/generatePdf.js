@@ -12,6 +12,7 @@ const fontkit = fontkitImport.default || fontkitImport;
 
 const PAGE_WIDTH = 595.5;
 const PAGE_HEIGHT = 842;
+const RULE_RIGHT = 567.3;
 const INK = rgb(0, 0, 0);
 
 const toPdfY = (topY) => PAGE_HEIGHT - topY;
@@ -50,6 +51,150 @@ function drawFittedText(page, font, text, x, y, maxWidth, maxSize) {
     font,
     color: INK,
   });
+}
+
+function breakLongWord(font, word, maxWidth, size) {
+  const parts = [];
+  let current = "";
+  for (const char of Array.from(word)) {
+    const candidate = current + char;
+    if (current && font.widthOfTextAtSize(candidate, size) > maxWidth) {
+      parts.push(current);
+      current = char;
+    } else {
+      current = candidate;
+    }
+  }
+  if (current) {
+    parts.push(current);
+  }
+  return parts;
+}
+
+export function wrapTextLines(font, text, maxWidth, size) {
+  const normalized = String(text || "")
+    .replace(/\r\n?/g, "\n")
+    .trim();
+  if (!normalized) {
+    return [];
+  }
+
+  const lines = [];
+  for (const paragraph of normalized.split("\n")) {
+    const words = paragraph.trim().split(/\s+/).filter(Boolean);
+    if (words.length === 0) {
+      lines.push("");
+      continue;
+    }
+
+    let current = "";
+    for (const word of words) {
+      const candidate = current ? `${current} ${word}` : word;
+      if (font.widthOfTextAtSize(candidate, size) <= maxWidth) {
+        current = candidate;
+        continue;
+      }
+
+      if (current) {
+        lines.push(current);
+        current = "";
+      }
+
+      if (font.widthOfTextAtSize(word, size) <= maxWidth) {
+        current = word;
+      } else {
+        const chunks = breakLongWord(font, word, maxWidth, size);
+        lines.push(...chunks.slice(0, -1));
+        current = chunks[chunks.length - 1] || "";
+      }
+    }
+
+    if (current) {
+      lines.push(current);
+    }
+  }
+
+  return lines;
+}
+
+export function layoutMultilineField(
+  font,
+  text,
+  {
+    maxWidth = 232,
+    maxSize = 12,
+    minSize = 8,
+    lineHeightRatio = 1.125,
+    blockTopY = 287.0,
+    singleLineBaselineY = 310.5,
+    defaultRuleY = 312.7,
+    maxRuleY = 350.0,
+    ruleGap = 2.2,
+  } = {}
+) {
+  const normalized = String(text || "")
+    .replace(/\r\n?/g, "\n")
+    .trim();
+  if (!normalized) {
+    return { lines: [], size: maxSize, baselines: [], ruleY: defaultRuleY };
+  }
+
+  const computeForSize = (size) => {
+    const lines = wrapTextLines(font, normalized, maxWidth, size);
+    if (lines.length <= 1) {
+      return {
+        lines,
+        size,
+        baselines: [singleLineBaselineY],
+        ruleY: defaultRuleY,
+      };
+    }
+
+    const lineHeight = size * lineHeightRatio;
+    const firstBaselineY = blockTopY + (size * 10) / 12;
+    const baselines = lines.map((_, index) => firstBaselineY + index * lineHeight);
+    const ruleY = Math.max(
+      defaultRuleY,
+      baselines[baselines.length - 1] + ruleGap
+    );
+    return { lines, size, baselines, ruleY };
+  };
+
+  let layout = computeForSize(maxSize);
+  for (let size = maxSize; size >= minSize; size -= 0.5) {
+    layout = computeForSize(size);
+    if (layout.ruleY <= maxRuleY) {
+      return layout;
+    }
+  }
+
+  const maxLines = Math.max(
+    1,
+    layout.baselines.filter((baseline) => baseline + ruleGap <= maxRuleY).length
+  );
+  const clampedLines = layout.lines.slice(0, maxLines);
+  const lastIndex = clampedLines.length - 1;
+  let lastLine = clampedLines[lastIndex] || "";
+  const ellipsis = "…";
+  while (
+    lastLine.length > 0 &&
+    font.widthOfTextAtSize(`${lastLine}${ellipsis}`, layout.size) > maxWidth
+  ) {
+    lastLine = lastLine.slice(0, -1).trimEnd();
+  }
+  clampedLines[lastIndex] = `${lastLine}${ellipsis}`;
+  const clampedBaselines = layout.baselines.slice(0, maxLines);
+  const clampedRuleY = Math.max(
+    defaultRuleY,
+    clampedBaselines[clampedBaselines.length - 1] + ruleGap
+  );
+
+  return {
+    lines: clampedLines,
+    size: layout.size,
+    baselines: clampedBaselines,
+    ruleY: clampedRuleY,
+  };
 }
 
 function asFontBytes(input) {
@@ -160,11 +305,9 @@ function drawFormChrome(page, regularFont, boldFont) {
     color: INK,
   });
 
-  const ruleRight = 567.3;
-  drawLine(page, 327.1, toPdfY(221.1), ruleRight, toPdfY(221.1));
-  drawLine(page, 327.1, toPdfY(237.1), ruleRight, toPdfY(237.1));
-  drawLine(page, 327.1, toPdfY(284.4), ruleRight, toPdfY(284.4));
-  drawLine(page, 327.1, toPdfY(312.7), ruleRight, toPdfY(312.7));
+  drawLine(page, 327.1, toPdfY(221.1), RULE_RIGHT, toPdfY(221.1));
+  drawLine(page, 327.1, toPdfY(237.1), RULE_RIGHT, toPdfY(237.1));
+  drawLine(page, 327.1, toPdfY(284.4), RULE_RIGHT, toPdfY(284.4));
 
   const jmbgTop = toPdfY(252.5);
   const jmbgBottom = toPdfY(268.5);
@@ -189,10 +332,10 @@ function drawFormChrome(page, regularFont, boldFont) {
   });
 
   drawLine(page, 164.1, toPdfY(408.9), 246.9, toPdfY(408.9));
-  drawLine(page, 377.5, toPdfY(424.3), ruleRight, toPdfY(424.3));
-  drawLine(page, 377.5, toPdfY(459.8), ruleRight, toPdfY(459.8));
-  drawLine(page, 377.5, toPdfY(506.1), ruleRight, toPdfY(506.1));
-  drawLine(page, 377.5, toPdfY(566.2), ruleRight, toPdfY(566.2));
+  drawLine(page, 377.5, toPdfY(424.3), RULE_RIGHT, toPdfY(424.3));
+  drawLine(page, 377.5, toPdfY(459.8), RULE_RIGHT, toPdfY(459.8));
+  drawLine(page, 377.5, toPdfY(506.1), RULE_RIGHT, toPdfY(506.1));
+  drawLine(page, 377.5, toPdfY(566.2), RULE_RIGHT, toPdfY(566.2));
 
   page.drawText(LABELS.date, {
     x: 191.6,
@@ -306,15 +449,22 @@ export async function generateVoterPdf(values, fonts) {
     fieldWidth,
     12
   );
-  drawFittedText(
-    page,
-    regularFont,
-    values.voteCityCountry,
-    331,
-    toPdfY(310.5),
-    fieldWidth,
-    12
-  );
+  const voteLayout = layoutMultilineField(regularFont, values.voteCityCountry, {
+    maxWidth: fieldWidth,
+  });
+  drawLine(page, 327.1, toPdfY(voteLayout.ruleY), RULE_RIGHT, toPdfY(voteLayout.ruleY));
+  voteLayout.lines.forEach((line, index) => {
+    if (!line) {
+      return;
+    }
+    page.drawText(line, {
+      x: 331,
+      y: toPdfY(voteLayout.baselines[index]),
+      size: voteLayout.size,
+      font: regularFont,
+      color: INK,
+    });
+  });
 
   const jmbg = String(values.jmbg || "").replace(/\D/g, "").slice(0, 13);
   jmbgBoxCenters().forEach((center, index) => {

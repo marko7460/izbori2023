@@ -56,8 +56,12 @@ export const FIELDS = [
     id: "voteCityCountry",
     number: "5",
     label: "Град, држава – где желим да гласам у иностранству",
-    helper: "Град, па држава. Нпр. Франкфурт, Немачка",
+    helper:
+      "Град и држава, или више редова (нпр. Делта, Британска Колумбија, Канада, или најближе место граду Ванкуверу)",
     autoComplete: "off",
+    multiline: true,
+    minRows: 2,
+    maxRows: 5,
   },
 ];
 
