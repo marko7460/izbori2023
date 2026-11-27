@@ -87,8 +87,7 @@
 
 .official-line-1,
 .official-line-2,
-.official-line-4,
-.official-line-5 {
+.official-line-4 {
   left: 327.1pt;
   width: 240.2pt;
 }
@@ -103,10 +102,6 @@
 
 .official-line-4 {
   top: 284.4pt;
-}
-
-.official-line-5 {
-  top: 312.7pt;
 }
 
 .official-jmbg {
@@ -153,7 +148,23 @@
 }
 
 .official-value-5 {
-  top: 299.2pt;
+  left: 327.1pt;
+  top: 286pt;
+  width: 240.2pt;
+  min-height: 26.7pt;
+  max-height: 64.2pt;
+  padding: 0 4pt;
+  box-sizing: border-box;
+  border-bottom: 1pt solid #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  overflow: hidden;
+  font-size: 12pt;
+  line-height: 1.125;
 }
 
 .official-passport {

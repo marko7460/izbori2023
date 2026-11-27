@@ -63,3 +63,21 @@ test("only accepts 13 JMBG digits", () => {
   fireEvent.change(jmbg, { target: { value: "12ab345678901234567" } });
   expect(jmbg).toHaveValue("1234567890123");
 });
+
+test("field 5 accepts multiline voting location and mirrors it in the preview", () => {
+  render(<App />);
+
+  const locationField = screen.getByLabelText(
+    /5\. град, држава – где желим да гласам/i
+  );
+  expect(locationField.tagName).toBe("TEXTAREA");
+
+  const multiLineValue =
+    "Делта, Британска Колумбија, Канада,\nили најближе место граду Ванкуверу";
+  fireEvent.change(locationField, { target: { value: multiLineValue } });
+
+  expect(locationField).toHaveValue(multiLineValue);
+  expect(screen.getByTestId("official-vote-city-country")).toHaveTextContent(
+    "Делта, Британска Колумбија, Канада, или најближе место граду Ванкуверу"
+  );
+});

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Alert,
   Box,
@@ -52,6 +52,8 @@ function usePreviewScale(containerRef) {
 function SignatureField({ signatureRef, onStroke }) {
   const containerRef = useRef(null);
   const [width, setWidth] = useState(320);
+  const widthRef = useRef(320);
+  const pendingRestoreRef = useRef(null);
 
   useEffect(() => {
     const node = containerRef.current;
@@ -59,23 +61,61 @@ function SignatureField({ signatureRef, onStroke }) {
       return undefined;
     }
 
-    const update = () => setWidth(Math.max(node.clientWidth, 240));
+    const update = () => {
+      const nextWidth = Math.max(Math.round(node.clientWidth), 200);
+      if (nextWidth === widthRef.current) {
+        return;
+      }
+
+      const pad = signatureRef.current;
+      if (pad && !pad.isEmpty() && typeof pad.toData === "function") {
+        pendingRestoreRef.current = {
+          data: pad.toData(),
+          fromWidth: widthRef.current,
+        };
+      }
+
+      widthRef.current = nextWidth;
+      setWidth(nextWidth);
+    };
+
     update();
     const observer = new ResizeObserver(update);
     observer.observe(node);
     return () => observer.disconnect();
-  }, []);
+  }, [signatureRef]);
+
+  useEffect(() => {
+    const pending = pendingRestoreRef.current;
+    const pad = signatureRef.current;
+    if (!pending || !pad || typeof pad.fromData !== "function") {
+      return;
+    }
+
+    pendingRestoreRef.current = null;
+    const scaleX = pending.fromWidth > width ? width / pending.fromWidth : 1;
+    const restored =
+      scaleX === 1
+        ? pending.data
+        : pending.data.map((stroke) =>
+            stroke.map((point) => ({ ...point, x: point.x * scaleX }))
+          );
+    pad.fromData(restored);
+    onStroke();
+  }, [width, signatureRef, onStroke]);
 
   return (
     <div className="signature-box" ref={containerRef}>
       <SignatureCanvas
         ref={signatureRef}
         penColor="black"
+        clearOnResize={false}
         onEnd={onStroke}
         canvasProps={{
           width,
           height: 140,
           className: "sigCanvas",
+          "aria-label": "Поље за потпис",
         }}
       />
     </div>
@@ -161,14 +201,14 @@ export default function VoterForm() {
     setValues((current) => ({ ...current, [field]: nextValue }));
   };
 
-  const captureSignature = () => {
+  const captureSignature = useCallback(() => {
     const canvas = signatureRef.current;
     if (!canvas || canvas.isEmpty()) {
       setSignatureDataUrl("");
       return;
     }
     setSignatureDataUrl(canvas.getCanvas().toDataURL("image/png"));
-  };
+  }, []);
 
   const clearSignature = () => {
     signatureRef.current?.clear();
@@ -299,16 +339,22 @@ export default function VoterForm() {
 
             {FIELDS.map((field) => (
               <div className="field" key={field.id}>
+                <label className="field-label" htmlFor={field.id}>
+                  {field.number}. {field.label}
+                </label>
                 <TextField
                   id={field.id}
-                  label={`${field.number}. ${field.label}`}
                   helperText={field.helper}
                   value={values[field.id]}
                   onChange={handleChange(field.id)}
                   fullWidth
+                  multiline={Boolean(field.multiline)}
+                  minRows={field.minRows}
+                  maxRows={field.maxRows}
                   autoComplete={field.autoComplete}
                   inputProps={{
                     inputMode: field.inputMode,
+                    pattern: field.id === "jmbg" ? "[0-9]*" : undefined,
                     maxLength: field.id === "jmbg" ? 13 : undefined,
                     "aria-describedby":
                       field.id === "jmbg" ? "jmbg-help" : undefined,
@@ -328,31 +374,37 @@ export default function VoterForm() {
             ))}
 
             <div className="field">
+              <label className="field-label" htmlFor="date">
+                Датум
+              </label>
               <TextField
                 id="date"
-                label="Датум"
                 type="date"
                 value={values.date}
                 onChange={handleChange("date")}
                 fullWidth
-                InputLabelProps={{ shrink: true }}
               />
             </div>
             <div className="field">
+              <label className="field-label" htmlFor="phone">
+                Контакт телефон
+              </label>
               <TextField
                 id="phone"
-                label="Контакт телефон"
                 type="tel"
                 autoComplete="tel"
                 value={values.phone}
                 onChange={handleChange("phone")}
                 fullWidth
+                inputProps={{ inputMode: "tel" }}
               />
             </div>
             <div className="field">
+              <label className="field-label" htmlFor="email">
+                И-мејл
+              </label>
               <TextField
                 id="email"
-                label="И-мејл"
                 type="email"
                 autoComplete="email"
                 value={values.email}
@@ -360,12 +412,16 @@ export default function VoterForm() {
                 error={Boolean(emailWarning)}
                 helperText={emailWarning || "За пријем решења"}
                 fullWidth
+                inputProps={{ inputMode: "email" }}
               />
             </div>
 
-            <Typography variant="subtitle1" component="p" sx={{ mb: 1 }}>
-              Потпис
-            </Typography>
+            <div className="signature-header">
+              <p className="field-label">Потпис</p>
+              <p className="signature-hint">
+                Потпишите се прстом (на телефону) или мишем (на рачунару).
+              </p>
+            </div>
             <SignatureField
               signatureRef={signatureRef}
               onStroke={captureSignature}

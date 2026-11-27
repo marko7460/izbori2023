@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef } from "react";
 import "./OfficialDocument.css";
 import {
   HEADER_LINES,
@@ -10,6 +11,24 @@ import { PAGE_HEIGHT_PX } from "./lib/pageSize";
 
 export default function OfficialDocument({ values, signatureDataUrl, scale = 1 }) {
   const jmbgDigits = String(values.jmbg || "").padEnd(13, " ").slice(0, 13).split("");
+  const voteBoxRef = useRef(null);
+  const voteText = String(values.voteCityCountry || "")
+    .replace(/\r\n?/g, "\n")
+    .replace(/\n+$/, "");
+
+  useLayoutEffect(() => {
+    const box = voteBoxRef.current;
+    if (!box) {
+      return;
+    }
+
+    let size = 12;
+    box.style.fontSize = `${size}pt`;
+    while (size > 8 && box.clientHeight > 0 && box.scrollHeight > box.clientHeight + 1) {
+      size -= 0.5;
+      box.style.fontSize = `${size}pt`;
+    }
+  }, [voteText]);
 
   return (
     <div className="official-scale" style={{ height: `${PAGE_HEIGHT_PX * scale}px` }}>
@@ -40,7 +59,6 @@ export default function OfficialDocument({ values, signatureDataUrl, scale = 1 }
         <div className="official-line official-line-1" />
         <div className="official-line official-line-2" />
         <div className="official-line official-line-4" />
-        <div className="official-line official-line-5" />
 
         <div className="official-abs official-value official-value-1">{values.fullName}</div>
         <div className="official-abs official-value official-value-2">{values.parentName}</div>
@@ -52,7 +70,13 @@ export default function OfficialDocument({ values, signatureDataUrl, scale = 1 }
           ))}
         </div>
         <div className="official-abs official-value official-value-4">{values.serbiaAddress}</div>
-        <div className="official-abs official-value official-value-5">{values.voteCityCountry}</div>
+        <div
+          className="official-abs official-value-5"
+          ref={voteBoxRef}
+          data-testid="official-vote-city-country"
+        >
+          <span>{voteText}</span>
+        </div>
 
         <div className="official-abs official-passport">{PASSPORT_NOTE}</div>
 

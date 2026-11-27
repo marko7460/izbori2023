@@ -2,6 +2,7 @@
   min-height: 100vh;
   background: #f3efe6;
   color: #1b1b1b;
+  overflow-x: clip;
 }
 
 .form-flag {
@@ -28,7 +29,9 @@
 .form-wrap {
   max-width: 1180px;
   margin: 0 auto;
-  padding: 20px 16px 120px;
+  padding: 20px max(16px, env(safe-area-inset-right))
+    calc(72px + env(safe-area-inset-bottom))
+    max(16px, env(safe-area-inset-left));
 }
 
 .form-hero h1 {
@@ -70,7 +73,7 @@
 
 .layout {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 20px;
 }
 
@@ -79,15 +82,36 @@
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(40, 28, 10, 0.08);
   padding: 18px 16px 20px;
+  min-width: 0;
 }
 
 .panel h2 {
-  margin: 0 0 14px;
+  margin: 0 0 16px;
   font-size: 1.15rem;
 }
 
 .field {
-  margin-bottom: 14px;
+  margin-bottom: 16px;
+}
+
+.field-label {
+  display: block;
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #1b1b1b;
+}
+
+.field .MuiInputBase-input {
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.field .MuiFormHelperText-root {
+  margin-left: 2px;
+  margin-right: 2px;
+  line-height: 1.35;
 }
 
 .jmbg-meter {
@@ -107,12 +131,30 @@
   background: #0c4076;
 }
 
+.signature-header {
+  margin-bottom: 8px;
+}
+
+.signature-header .field-label {
+  margin-bottom: 2px;
+}
+
+.signature-hint {
+  margin: 0;
+  color: #5a564c;
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+
 .signature-box {
   border: 1px dashed #8b867c;
   border-radius: 12px;
   background: #faf8f3;
   overflow: hidden;
   touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .signature-box canvas {
@@ -120,6 +162,7 @@
   width: 100%;
   height: 140px;
   touch-action: none;
+  cursor: crosshair;
 }
 
 .actions {
@@ -127,6 +170,10 @@
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 14px;
+}
+
+.actions .MuiButton-root {
+  min-height: 44px;
 }
 
 .preview-frame {
@@ -156,12 +203,40 @@
 .source-link {
   margin-top: 16px;
   font-size: 0.92rem;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 599px) {
+  .form-wrap {
+    padding: 16px max(12px, env(safe-area-inset-right))
+      calc(56px + env(safe-area-inset-bottom))
+      max(12px, env(safe-area-inset-left));
+  }
+
+  .panel {
+    padding: 16px 14px 18px;
+    border-radius: 14px;
+  }
+
+  .actions .MuiButton-root {
+    flex: 1 1 calc(50% - 5px);
+  }
+
+  .actions .MuiButton-contained {
+    flex: 1 1 100%;
+    order: -1;
+  }
 }
 
 @media (min-width: 960px) {
   .layout {
-    grid-template-columns: minmax(0, 1fr) minmax(320px, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 1fr);
+    gap: 24px;
     align-items: start;
+  }
+
+  .panel {
+    padding: 22px 24px 24px;
   }
 
   .preview-column {
@@ -177,6 +252,7 @@
 
   .form-shell {
     background: #fff;
+    overflow: visible;
   }
 
   .no-print {
